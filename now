@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+NOW_FILE = "#{ENV['HOME']}/.now"
+
+now = ARGV.join(' ')
+
+if now.empty?
+  exit 1 unless File.exists? NOW_FILE
+  puts File.open(NOW_FILE).read
+  exit 0
+elsif now =~ /.+\?$/
+  exit 1 unless File.exists? NOW_FILE
+  last = File.open(NOW_FILE).read.strip
+  puts last
+  exit now.gsub(/\?$/,'') == last ? 0 : 1
+else
+  File.open(NOW_FILE, "w+") do |f|
+    f.puts now
+  end
+  puts now
+  exit 0
+end
